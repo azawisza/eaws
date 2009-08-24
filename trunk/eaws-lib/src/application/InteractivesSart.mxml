@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="416">
+	<mx:TitleWindow id="TWindow"
+		layout="absolute"
+		width="340"
+		height="350"
+		title="Problem"
+		horizontalCenter="0" verticalCenter="0"
+		close="{closeWindow(event)}"
+		showCloseButton="true"
+		
+		>
+		<mx:Label x="10" y="46" text="Following modules are unable to work properly:"/>
+		<mx:ProgressBar x="38" y="10"
+			label="Testing application, please wait..."
+			 width="241"
+			 indeterminate="true"
+			 id="testWSPBar"
+			 />
+		<mx:TextArea x="10" y="72" width="300" height="138" id="wsTestReportArea"/>
+		<mx:Button x="245" y="278" label="Save" enabled="false"
+			click="{continueWithAplication()}"
+			 id="currencySaveButton"/>
+		<mx:Label x="10" y="220" text="Set USD price" enabled="false" id="currencyLabelText"/>
+		<mx:NumericStepper x="98" y="218" id="currencyDecs" enabled="false" value="1"/>
+		<mx:NumericStepper x="166" y="218" id="currencyCents" enabled="false"/>
+		<mx:Label x="158" y="220" text="," width="13" id="curremcyLabel" enabled="false"/>
+	</mx:TitleWindow>
+	<mx:Script>
+		<![CDATA[
+		/*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+			import mx.logging.Log;
+			import mx.logging.ILogger;
+			import mx.core.IFlexDisplayObject;
+			import mx.managers.PopUpManager;
+			import mx.events.CloseEvent;
+			import web.service.Currencies;
+			private static var logger:ILogger = Log.getLogger("application.IStart");
+			public function continueWithAplication():void {
+				if(!Conf.CUR){
+					Currencies.getInstance().fauilureValue=new Number(currencyDecs.value+""+currencyCents.value);	
+				}
+				
+			}
+			public function closeWindow(eve:CloseEvent):void {
+				trace("try to remove");
+				PopUpManager.removePopUp(this);
+	
+			}
+			
+		]]>
+	</mx:Script>
+</mx:Canvas>
+

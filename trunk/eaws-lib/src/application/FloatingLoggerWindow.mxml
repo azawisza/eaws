@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+	<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	creationComplete="{init()}"
+	implements="application.TextAreaLoggerInterface"
+	
+	 width="811" height="583">
+	<mx:TitleWindow width="362" height="372" layout="absolute" id="txtWindow" title="Logging" showCloseButton="true"
+			close="{closeWindow(event)}"
+		 verticalCenter="-12" right="224.5">
+		<mx:TextArea x="0" y="0" width="100%" height="100%" id="area"/>
+		
+	</mx:TitleWindow>
+	<mx:Script>
+		<![CDATA[
+		/*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+			import mx.logging.Log;
+			import mx.logging.ILogger;
+			import mx.managers.PopUpManager;
+			import mx.events.CloseEvent;
+		
+			
+			public var imageURL:String="";
+			public var windowTitle:String="Image";
+			public var windowHeight:String="";
+			public var windowWidth:String="";
+			
+			public function init():void {
+				
+			}
+			
+			public function closeWindow(eve:CloseEvent):void {
+				
+				PopUpManager.removePopUp(this);
+			}
+			
+			public function addText(txt:String,filters:Array):void {
+				area.text=area.text.substr(0,area.text.length-2)+txt+" from:"+"\n";
+        		area.text+="\n\n";
+        		area.verticalScrollPosition=area.maxVerticalScrollPosition+10;
+			}
+		]]>
+	</mx:Script>
+</mx:Canvas>
+	
+
