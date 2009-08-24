@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="1005" height="100%" creationComplete="{init('dsa')}" xmlns:local="*"
+	implements="application.TextAreaLoggerInterface"
+	>
+	<mx:TextArea x="0" y="40" width="100%" height="100%" id="logTextarea" verticalScrollPolicy="on" liveScrolling="true" editable="false"  fontFamily="Courier New" fontSize="14" wordWrap="false" backgroundColor="#000000" color="#A9B8BB" themeColor="#A9B8BB"/>
+	
+	<mx:ComboBox x="10" y="10" dataProvider="{levels}" change="{setLevel(event)}" width="84" id="logLevelCombo"></mx:ComboBox>
+	<mx:Array id="levels">
+		<mx:String>DEBUG</mx:String>
+		<mx:String>INFO</mx:String>
+		<mx:String>WARN</mx:String>
+		<mx:String>ERROR</mx:String>
+		<mx:String>FATAL</mx:String>
+		<mx:String>ALL</mx:String>
+	</mx:Array>
+	<mx:Array id="packages">
+	    <mx:String>all</mx:String>
+		<mx:String>application.*</mx:String>
+		<mx:String>cmd.*</mx:String>
+		<mx:String>cmd.ui.*</mx:String>
+		<mx:String>engine.*</mx:String>
+		<mx:String>web.*</mx:String>
+		<mx:String>web.data.*</mx:String>
+		<mx:String>web.service.*</mx:String>
+		
+	</mx:Array>
+		<mx:PopUpButton label="Packages ..." id="popbut"
+								openAlways="true"
+								
+							 x="102" y="10">
+								<mx:popUp>
+								
+								
+								
+<!-- POPUP  -->								
+								
+								
+														
+<mx:TitleWindow id="titleWin" 
+                   height="400"
+                   width="400"  
+                   showCloseButton="true"
+                   verticalScrollPolicy="off"
+                   borderAlpha="0.6"
+                   backgroundAlpha="0.6"
+                   horizontalScrollPolicy="off"
+                   close="popbut.close();"
+                   layout="vertical"
+                   toolTip="If no pacakge is selected, system classes show its output (versy slow!)"
+                   
+                   >
+                   
+   <mx:DataGrid dataProvider="{packProvider}" width="100%" height="100%" backgroundColor="yellow">
+             <mx:columns>
+             
+             <mx:DataGridColumn headerText="Packages" width="250" >
+             
+             <mx:itemRenderer>
+             <mx:Component >
+             <mx:HBox>
+             <mx:CheckBox change="{onOff(event)}" selected="true"></mx:CheckBox>
+             
+             <mx:Label text="{data.pack}"  width="100%" />
+             
+                  <mx:Script>
+             <![CDATA[
+             /*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+             import tools.HashMap;
+             import mx.binding.utils.ChangeWatcher;
+             import mx.collections.ArrayCollection;
+           
+             import mx.logging.LogEventLevel;
+             import mx.logging.Log;
+             import mx.logging.ILogger;
+             
+			
+             private function onOff(eve:Event):void {
+             	trace("testing loop");
+             	if(outerDocument.toShow.getValue(data.pack)!=null){
+             		trace("there is one");
+             		outerDocument.toShow.put(data.pack,null);
+             		trace(outerDocument.toShow.toString());
+             	}else {
+             		trace("there is NO any");
+             		outerDocument.toShow.put(data.pack,data.pack);
+             		trace(outerDocument.toShow.toString());	
+             	}
+             	trace("---");
+             	trace(outerDocument.toShow.toString());
+             	var acol:ArrayCollection = outerDocument.toShow.values();
+             	var acol2:ArrayCollection = new ArrayCollection();
+             	for(var i:int=0;i<acol.length;i++){
+             		if(acol.getItemAt(i)!=null){
+             			acol2.addItem(acol.getItemAt(i));
+             		}
+             	}
+             	trace(acol2.source.toString());
+             	TextAreaTarget.instance.filters = acol2.source;
+             	trace(TextAreaTarget.instance.filters.toString());
+             	TextAreaTarget.instance.level=LogEventLevel.DEBUG;
+             	
+             	outerDocument.setLevel(null);
+             	
+             	//TextAreaTarget.instance.filters
+             	
+             }
+            
+          
+             private function setColor(eve:Event):void {
+             	
+             } 
+             ]]>
+                            </mx:Script>
+          
+             </mx:HBox>
+              
+             
+             
+             </mx:Component>
+             </mx:itemRenderer>
+             </mx:DataGridColumn>
+             
+             </mx:columns>
+             </mx:DataGrid>
+               
+            
+            
+               
+            
+           </mx:TitleWindow>
+           
+           
+<!-- POPUP  -->
+
+
+
+								</mx:popUp>
+								
+								
+							</mx:PopUpButton>
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import application.TextAreaLoggerInterface;
+			import application.IStart;
+			import tools.HashMap;
+	
+			
+			import web.service.Testy;
+		
+	
+			import mx.logging.ILogger;
+			import mx.logging.Log;
+			import mx.formatters.SwitchSymbolFormatter;
+			import mx.logging.LogEventLevel;
+			import mx.logging.targets.TraceTarget;
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.ResultEvent;
+			import mx.rpc.http.HTTPService;
+			private static var logger:ILogger = Log.getLogger("amazon.cmp_console");
+			
+			public var toShow:HashMap= new HashMap();
+			
+			[Bindable]
+			public var packProvider:ArrayCollection = new ArrayCollection(); 
+			public function setData():void {
+			/*	_cmd.enabled =!(_cmd.enabled);
+				_cmdui.enabled=!(_cmdui.enabled);
+				_engine.enabled=!(_engine.enabled);
+				_web.enabled=!(_web.enabled);
+				_webdata.enabled=!(_webdata.enabled);
+			
+				_webservice.enabled=!(_webservice.enabled);
+				_application.enabled=!(_application.enabled);*/
+			}
+			/**This fumction loads data (list of packages to display in logger UI)from conf file 
+			 * and then uses handler to proces data and add them to bindable array.
+			 * */
+			public function init(file:String):void {
+				var f:HTTPService= new HTTPService();
+				f.url="packages.conf";
+				f.addEventListener(ResultEvent.RESULT,confReaderHandler);
+				f.send(); 
+				var ta: TextAreaTarget = new TextAreaTarget(logTextarea);
+				
+			    TextAreaTarget.instance.registerTextAreaLogger(this);
+		
+			}
+	
+			/**Loading data from file - packages to log from  .*/
+			private function confReaderHandler(eve:ResultEvent):void {
+					var rez:String =eve.result as String;
+					var data:Array = rez.split(",");
+					var dataS:Array = new Array();
+					
+					
+					for(var i:int=0;i<data.length;i++){
+						var cary:Object = new Object();
+						trace(">>"+i+" = "+data[i]);
+						var st:String = data[i]as String;
+						//data[i]=st.substring(0,st.length-1);
+						data[i]=st;
+						dataS[i]=data[i] as String ;
+						cary.pack=data[i];
+						cary.on=false;
+						//cary.TextAreaTraceTarget=new TextAreaTarget(logTextarea);
+						//cary.TextAreaTraceTarget.level=LogEventLevel.FATAL;
+						//cary.TextAreaTraceTarget.filters=[cary.pack];
+						data[i]=cary;
+						//Log.addTarget(cary.TextAreaTraceTarget); 
+					}
+					for(var i:int=0;i<data.length;i++){
+						trace(">>"+i+" = "+data[i]);
+					}
+					packProvider.source=data;
+					//after loading package names, add custom logger
+					//tt = new TextAreaTarget(logTextarea);
+				   // tt.level=LogEventLevel.ALL;
+				   // tt.removeLogger();
+				    
+				    TextAreaTarget.instance.filters=dataS;
+				    for(var k:int=0;k<dataS.length;k++){
+				    	toShow.put(dataS[k],dataS[k]);
+				    }
+				    
+					TextAreaTarget.instance.level=LogEventLevel.DEBUG;
+					
+			}
+		
+			/**This method 1. checks out whta packs are involved, sets logging level for them .*/
+			public function introduceLoggingSettings():void {
+				
+				
+					var packagesToSet:ArrayCollection= new ArrayCollection();
+					for(var i:int=0;i<packProvider.length;i++){
+						trace("--->"+packProvider.getItemAt(i).on);
+						if(packProvider.getItemAt(i).on){
+							//ok this  object is to be changed.
+							 packagesToSet.addItem(packProvider.getItemAt(i).pack as String);
+							 trace("--->"+packProvider.getItemAt(i).pack as String);
+						}	
+				
+					}
+					/*
+					//loading packages that are concerned.
+					tt.filters=packagesToSet.source;
+					
+					//LEVEL setting
+					var selectedLevel:String = new String();
+					selectedLevel = selectedLevelCombo.text;
+					if(selectedLevel=="INFO") {	tt.level=LogEventLevel.INFO;
+					trace("info");}
+					if(selectedLevel=="DEBUG"){	tt.level=LogEventLevel.DEBUG; trace("debug");}
+					if(selectedLevel=="WARN"){	tt.level=LogEventLevel.WARN;trace("warn");}
+					if(selectedLevel=="FATAL"){	tt.level=LogEventLevel.FATAL;trace("fatal");}
+					if(selectedLevel=="ERROR")	{tt.level=LogEventLevel.ERROR;trace("error");}
+					if(selectedLevel=="ALL")	{tt.level=LogEventLevel.ALL;trace("error");}
+				*/
+			}
+				
+			public function addit():void {
+				
+			}
+			public function openFloatingLogWindow(event:MouseEvent):void {
+				trace("opening floating window with logging");
+				IStart.getInstance().openFloatingLoggerWindow();
+			}
+			
+			 public function setLevel(eve:Event):void {
+           
+             switch(logLevelCombo.text){
+             	case "DEBUG":{
+             		trace("debug");
+             		TextAreaTarget.instance.level=LogEventLevel.DEBUG;
+             		//outerDocument.packProvider.refresh();
+             		break;
+             	}
+             	case "INFO":{
+             		trace("info");
+             		TextAreaTarget.instance.level=LogEventLevel.INFO;
+             		//outerDocument.packProvider.refresh();
+             		break;
+             	}
+             	case "WARN":{
+             		trace("warn");
+             		TextAreaTarget.instance.level=LogEventLevel.WARN;
+             		//outerDocument.packProvider.refresh();
+             		break;
+             	}
+             	case "ERROR":{
+             		trace("error");
+             		TextAreaTarget.instance.level=LogEventLevel.ERROR;
+             		//outerDocument.packProvider.refresh();
+             		
+             		break;
+             	}
+             	case "FATAL":{
+             		trace("fatal");
+             		TextAreaTarget.instance.level=LogEventLevel.FATAL;
+             		//outerDocument.packProvider.refresh();
+             		break;
+             	}
+             	default:{
+             		trace("Not specified");
+             		break;
+             	}
+             }}
+                public function addText(txt:String,filters:Array):void {
+		
+				
+				logTextarea.text=logTextarea.text.substr(0,logTextarea.text.length-2)+txt+" from:"+"\n";
+        		logTextarea.text+="\n\n";
+        		logTextarea.verticalScrollPosition=logTextarea.maxVerticalScrollPosition+10;	             			
+             }
+             public function showAbout(eve:MouseEvent):void {
+             	Alert.show("Simple Flex Logging Component, Project website: www.azbest.vdl.pl/sflc. All changes affects logging system in real time.License: undefined yet.","About");
+             }
+             public function onClickSearchConsole(eve:MouseEvent):void {	
+             	
+             	
+             	var revelation:int = logTextarea.text. search(searchInput.text);
+             	
+             	
+             	
+             }
+             
+		]]>
+	</mx:Script>
+
+	<mx:Button x="491" y="10" label="Clear" id="applyLogging" click="{logTextarea.text=''}"/>
+	<mx:CheckBox x="210" y="10" label="Date"  change="{TextAreaTarget.instance.includeDate=!TextAreaTarget.instance.includeDate}"/>
+	<mx:CheckBox x="259" y="10" label="Time" click="{TextAreaTarget.instance.includeTime=!TextAreaTarget.instance.includeTime}"
+		
+		/>
+	<mx:CheckBox x="320" y="10" label="Category" change="{TextAreaTarget.instance.includeCategory=!TextAreaTarget.instance.includeCategory}"/>
+	<mx:CheckBox x="403" y="10" label="Level" change="{TextAreaTarget.instance.includeLevel=!TextAreaTarget.instance.includeLevel}"/>
+	<mx:Button y="10" label="About" click="{showAbout(event)}" right="10"/>
+	<mx:TextInput x="564" y="10" width="176" id="searchInput"  enabled="false"/>
+	<mx:Button x="748" y="10" label="Search" id="searchButton" click="{onClickSearchConsole(event)}" enabled="false"/>
+	
+	
+</mx:Canvas>
+

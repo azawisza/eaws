@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:ns1="*" xmlns:ns2="amazon.*" width="400" height="300"
+	
+	implements="web.WebServiceListener"
+	
+	creationComplete="{init()}"
+	 borderColor="#B7BABC">
+
+	<mx:DataGrid dataProvider="{itemAdInit}" variableRowHeight="true" borderColor="#8EA4AF" alternatingItemColors="[#8EA4AF, #8EA4AF]"
+		 selectable="false" headerHeight="1"
+		 id="mainDataGrid"
+		
+		  textAlign="center" width="100%" height="100%" enabled="true" editable="false" horizontalCenter="0" verticalCenter="0">
+		<mx:columns>
+			  			   
+			<mx:DataGridColumn  dataField="{data}">
+			<mx:itemRenderer>
+				<mx:Component>
+					<ns2:amz_Result
+						data="{data}">
+						
+					</ns2:amz_Result>
+				</mx:Component>
+			</mx:itemRenderer>
+				
+				
+			</mx:DataGridColumn>
+			
+		</mx:columns>
+	</mx:DataGrid>
+	<mx:Script>
+		<![CDATA[
+		/*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+			import engine.StateMachine;
+			import mx.logging.Log;
+			import mx.logging.ILogger;
+			import mx.utils.ObjectProxy;
+			import application.AltEBayController;
+			import application.AltCNETController;
+			import tools.HashMap;
+			import web.data.DataObjectAmazon;
+			import web.data.AmazonSearchResults;
+			import web.service.WSResultParserAmazon;
+			import web.WebServiceSubject;
+			import mx.events.SliderEvent;
+			import mx.collections.ArrayCollection;
+			
+			
+			private static var logger:ILogger = Log.getLogger("amazon.sys_Viewer");
+			private  var cool:ArrayCollection= new ArrayCollection();
+			/**This method ads new items to table.*/
+			public function testComposite(eve:SliderEvent):void {
+				var data:Object= new Object();
+				data.no=eve.value;
+				cool.addItem(data);
+			}
+			
+			private  var itemAdInit:ArrayCollection= new ArrayCollection();
+			public function addItemToUI(data):void {
+				
+				itemAdInit.addItem(data);
+				
+			}
+			
+			
+			public function init():void {
+				trace("Web service listener (table sys_Viewer) Registered in WSResultParserAmazon"); 
+				WSResultParserAmazon.getInstance().regsiterWebServiceListener(this);
+			}
+			[Bindable]
+			private var dataSource:AmazonSearchResults= null;
+			
+			public function update(data:Object):void {
+				var dtSrc:Array= new Array();
+				
+				trace("\n\n UI component beeing updated with data (AmazonSearchResults) from amazon search:\n");
+				trace((data as AmazonSearchResults).toString());
+				trace("-----  ---- ---- ---- -----  --- Propagating data in interface");
+				trace("");
+				
+				this.dataSource= data as AmazonSearchResults;
+				var count:int = dataSource.ItemCount;
+				trace(" ... adding item to UI, current itemAdInit.length="+itemAdInit.length);
+				
+				
+				
+				
+				for(var i:int=0;i<count;i++){
+				trace("removing elements ...");
+					dtSrc[i]=null;
+					
+				//	var data:Object=(dataSource.amazonSearchDataObjects.getItemAt(i) as DataObjectAmazon).getData();
+					//addItemToUI( data );
+					//trace((dataSource.amazonSearchDataObjects.getItemAt(i) as DataObjectAmazon).toString());
+					
+				}
+				
+				for(var i:int=0;i<count;i++){
+					dtSrc[i]= (dataSource.amazonSearchDataObjects.getItemAt(i)as DataObjectAmazon);
+					AltEBayController.getInstance().configure(itemAdInit,dataSource.amazonSearchDataObjects.getItemAt(i)as DataObjectAmazon);
+					AltCNETController.getInstance().configure(itemAdInit,dataSource.amazonSearchDataObjects.getItemAt(i)as DataObjectAmazon);
+					if(StateMachine.getInstance().sdata.cnetCall)AltCNETController.getInstance().launchCNETAlt((dtSrc[i] as DataObjectAmazon).Manufacturer,(dtSrc[i] as DataObjectAmazon).Model);
+					if(StateMachine.getInstance().sdata.ebayCall)AltEBayController.getInstance().launchEBayAlt((dtSrc[i] as DataObjectAmazon).Manufacturer,(dtSrc[i] as DataObjectAmazon).Model,StateMachine.getInstance().sdata.ebayItems);
+					trace("Added new one ");
+					
+				    //var data:Object=(dataSource.amazonSearchDataObjects.getItemAt(i) as DataObjectAmazon).getData();
+					//addItemToUI( data );
+					//trace((dataSource.amazonSearchDataObjects.getItemAt(i) as DataObjectAmazon).toString());
+					
+				}
+				
+				 trace("Clearing old data binder.");
+				 itemAdInit.source=null;
+				 itemAdInit.source=dtSrc;
+				 trace(" all stff added, now current itemAdInit.length="+itemAdInit.length);
+				 itemAdInit.refresh();
+			}
+			public function showResultGrid():void {
+				mainDataGrid.visible=true;
+			}
+			private var memory:HashMap= new HashMap();
+			
+			
+		
+			
+			
+			
+		]]>
+	</mx:Script>
+
+	
+</mx:Canvas>

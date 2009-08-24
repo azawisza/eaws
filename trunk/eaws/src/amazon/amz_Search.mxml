@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="750" height="86"  label="Amazon Search"  borderStyle="solid" borderThickness="0"
+	implements="application.PortalSearchSettingsUpdate"
+	creationComplete="{main()}"
+	
+	
+	>
+
+
+	<mx:VBox verticalAlign="middle" horizontalAlign="center" width="740" backgroundColor="#B1BEC5" horizontalCenter="0" height="86" verticalCenter="0">
+		<mx:VBox height="38" width="100%" fontStyle="normal">
+			<mx:HDividedBox width="100%" height="100%">
+				<mx:VBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" backgroundColor="#FFFFFF" cornerRadius="10">
+					<mx:VBox width="100%" height="100%" horizontalAlign="center">
+						<mx:HBox width="100%" height="100%" paddingLeft="5" paddingRight="5" verticalAlign="middle">
+							<mx:TextInput width="100%" id="amKeyword" text="samsung"/>
+							<mx:Button label="Search" width="18%" id="amSearch"
+								click="amSearchCall()" 
+								
+								/>
+							<mx:PopUpButton label="Enhanced Search Settings" id="popbut"
+								openAlways="true"
+								
+							>
+								<mx:popUp>
+								
+								<mx:TitleWindow id="titleWin"
+								                   height="230"
+								                   showCloseButton="true"
+								                   verticalScrollPolicy="off"
+								                   borderAlpha="0.6"
+								                   backgroundAlpha="0.6"
+								      
+								                   horizontalScrollPolicy="off"
+								                   close="popbut.close();">
+								               <mx:ToolBar width="320" >
+								               <mx:Form width="260" height="100%" borderColor="#FFFFFF"  paddingTop="0">
+								               <mx:FormItem height="100%" width="222" horizontalAlign="left">
+								               <mx:Label text="Search in ..."/>
+								               <mx:ComboBox width="120" selectedIndex="0"  id="amzCategory" dataProvider="{categoryName}" visible="true"></mx:ComboBox>
+								               	<mx:CheckBox label="Add CNET reviews and prices" id="cnetRevAndPrice" enabled="true" selected="true" />
+								               	<mx:CheckBox label="Add eBay search results" id="ebayAddAlt"
+								               	
+								               		selected="true"
+								               		click="{ebayBuyNowOnly.enabled=!ebayBuyNowOnly.enabled; ebayAltItemsCount.enabled=!ebayAltItemsCount.enabled}"/>
+								               	<mx:CheckBox label="eBay BuyNow only "  id="ebayBuyNowOnly" 
+								               		
+								               		/>
+								               	
+								               	<mx:ComboBox 
+								               		dataProvider="{ebayItemCount}"
+								               		 id="ebayAltItemsCount"
+								               		 close="{onCloseEbayAltItemsCount(event)}"
+								               		 
+								               		 >
+								               	</mx:ComboBox>
+								               </mx:FormItem>
+								               </mx:Form>
+								               </mx:ToolBar>
+								               
+								               
+								               
+								           </mx:TitleWindow>
+									
+								</mx:popUp>
+							</mx:PopUpButton>
+							
+						</mx:HBox>
+					</mx:VBox>
+				</mx:VBox>
+			</mx:HDividedBox>
+		</mx:VBox>
+		<mx:HBox width="100%" height="24" horizontalAlign="center" verticalAlign="middle">
+			<mx:Button label="Back" cornerRadius="0" id="amzBack"
+				click="{amzGoBack()}"
+				/>
+			<mx:Label text="" fontWeight="bold" id="amzResultsPlace" width="140"/>
+			<mx:ComboBox cornerRadius="0" text="Page 3245" width="0" textAlign="center" visible="false"></mx:ComboBox>
+			<mx:Button label="Next" cornerRadius="0" id="amzNext"
+				click="{amzGoNext()}"
+				/>
+		</mx:HBox>
+	</mx:VBox>
+
+
+		<mx:Array id="noOfAlternatives">
+		<mx:String>3 alternatives</mx:String>
+		<mx:String>5 alternatives</mx:String>
+		<mx:String>10 alternatives</mx:String>
+	</mx:Array>
+	<mx:Array id="categoryName">
+	    <mx:String>Electronics</mx:String>
+		<mx:String>PCHardware</mx:String>
+	</mx:Array>
+
+	<mx:Script>
+		<![CDATA[
+		/*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+			import mx.collections.ArrayCollection;
+			import mx.logging.Log;
+			import mx.logging.ILogger;
+			import engine.StateMachine;
+			import tools.HashMap;
+			import web.data.SearchData;
+			import application.UIFacade;
+			import application.Conf;
+			import web.service.Currencies;
+			import mx.collections.XMLListCollection;
+		
+			import cmd.cmd_eBayCall;
+			import cmd.cmd_CNETCall;
+			import cmd.cmd_AmazonCallRest;
+			import cmd.cmd_AmazonCall;
+			import cmd.cmd_uiAmazonQuery;
+			import cmd.Invoker;
+			
+			private static var logger:ILogger = Log.getLogger("fx2");
+			private var ebayItemCount:ArrayCollection = new ArrayCollection([
+				{label:"5 eBay alternatives",value:"5"},
+				{label:"10 eBay alternatives",value:"10"},
+				{label:"15 eBay alternatives",value:"15"}
+			]);
+			
+			private var ebayCount:int =5;
+			private function onCloseEbayAltItemsCount(eve:Event):void {
+				ebayCount = ComboBox(eve.target).selectedItem.value;
+			}
+			
+			private function amSearchCall(){
+				if(amKeyword.text==""){
+				return;
+				}
+				//Invoker.getInstance().addCommand(new cmd_AmazonCall(amQuery.text,amCategory.text,1));
+				
+				//Invoker.getInstance().addCommand(new cmd_AmazonCallRest(amQuery.text,amCategory.text,1));
+				//Invoker.getInstance().addCommand(new cmd_CNETCall(amQuery.text,""));
+				//Invoker.getInstance().addCommand(new cmd_eBayCall(amQuery.text,"",5));
+//eBayCallRest				
+				//Invoker.getInstance().addCommand(new eBayCallRest(amQuery.text,"",5));
+		
+			//	
+			//	Invoker.getInstance().invoke();	
+				var sd:SearchData= new SearchData();
+				sd.cnetCall=cnetRevAndPrice.selected;
+				sd.ebayBuyNow=ebayBuyNowOnly.selected;
+				sd.ebayCall=ebayAddAlt.selected;
+				sd.ebayItems=ebayCount;
+				sd.keyword=amKeyword.text;
+				sd.category=(categoryName[amzCategory.selectedIndex]);
+				sd.fromItem=1;
+				sd.toItem=10;
+					
+				StateMachine.getInstance().newSeacrh(sd);
+					 
+			}
+			
+			
+			private function main():void {
+				
+			
+				var xml:XML= <items><dog name="pinky">aa</dog> <dog>bb</dog></items>;
+				var list:XMLList= new XMLList(xml);				
+				var col:XMLListCollection= new XMLListCollection(list);
+				trace(col.toXMLString());
+				trace("attribs "+col.attributes().toXMLString());
+				trace("name "+col.attribute("pinky").toXMLString());
+				
+				UIFacade.getInstance().registerSearchBoxUI(this);
+				//initialzaing UI elements according to availability.
+				 
+			}
+			
+			
+			public function updateSearchSettings():void {
+				trace("------------");
+		    if(Conf.CNE==1){
+				cnetRevAndPrice.enabled="true";
+				
+			}
+			if(Conf.CUR==1){
+				
+			}
+            if(Conf.EBY==1){
+            	ebayAddAlt.enabled="true";
+            	
+            }
+            
+			}
+			
+			public function amzGoNext():void {
+			if(amKeyword.text==""){
+				return;
+				}
+				trace("Calling for next elements...");
+				StateMachine.amz_PAGE++;
+				amSearchCall();
+			}
+			public function amzGoBack():void {
+			if(amKeyword.text==""){
+				return;
+				}
+				trace("Calling for previous elements...");
+				StateMachine.amz_PAGE--;
+				amSearchCall();
+			}
+			public function setBrowseResultsLabel(txt:String):void {
+				this.amzResultsPlace.text=txt;
+				
+			}	
+		]]>
+	</mx:Script>
+	
+		
+		
+	
+	
+		
+</mx:Canvas>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300">
+	<mx:Button x="10" y="10" label="Button" click="{insertData(event)}"/>
+	
+
+	<mx:DataGrid x="0" y="53" variableRowHeight="true" width="100%" height="100%" id="outerGrid" dataProvider="{dynamicData}" >
+		<mx:columns>
+			<mx:DataGridColumn headerText="Column 1" >
+			
+				<mx:itemRenderer>
+					<mx:Component>
+						<mx:Canvas>
+							<mx:DataGrid  dataProvider="{data.Phones}" height="100%" width="100%" id="innerGrid"
+							itemClick="(onItemClickForInnerGrid(event))"
+								> 
+							<mx:columns>
+								<mx:DataGridColumn dataField="{data.PhoneName}" labelFunction="addData" 
+									
+									>
+								
+								</mx:DataGridColumn>
+									<mx:DataGridColumn dataField="{data.PhoneNumber}">
+								</mx:DataGridColumn>
+							
+								</mx:columns>
+									<mx:Script>
+									<![CDATA[
+									/*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+										import mx.events.ListEvent;
+										import mx.controls.dataGridClasses.DataGridColumn;
+										import mx.controls.CheckBox;
+										public function addData(item:Object, column:DataGridColumn):Object{
+												
+												return item.PhoneNumber;
+												//return  "aaaaa";
+										}
+										public function onItemClickForInnerGrid(eve:ListEvent):void {
+												trace("PN>"+innerGrid.selectedItem.PhoneNumber);
+												navigateToURL(new URLRequest("http://www.onet.pl"), '_blank')
+										}
+									]]>
+								</mx:Script>
+							</mx:DataGrid>	
+							</mx:Canvas>
+					</mx:Component>
+				</mx:itemRenderer>
+			</mx:DataGridColumn>
+			
+		</mx:columns>
+	</mx:DataGrid>
+		<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.messaging.AbstractConsumer;
+			
+			[Bindable]
+			public var dynamicData:ArrayCollection= new ArrayCollection();
+			
+			public function insertData(eve:MouseEvent):void {
+				
+				var dataObject:Object= new Object();
+				dataObject.Name="Foo";
+				dataObject.Surname="Bar";
+				dataObject.PhoneNumber="000"
+				var innerInhalt:ArrayCollection  = new ArrayCollection();
+				
+				var dataObject11:Object= new Object();
+				dataObject11.PhoneName="Buzz";
+				dataObject11.PhoneNumber="444";
+				innerInhalt.addItem(dataObject11);
+				
+				
+				var dataObject12:Object= new Object();
+				dataObject12.PhoneName="Kazz";
+				dataObject12.PhoneNumber="555";
+				innerInhalt.addItem(dataObject12);
+				
+				var dataObject13:Object= new Object();
+				dataObject13.PhoneName="Rezz";
+				dataObject13.PhoneNumber="666";
+				innerInhalt.addItem(dataObject13);
+				
+				dataObject.Phones= innerInhalt;
+				
+				dynamicData.addItem(dataObject);
+				
+		/*		var dataObject2:Object= new Object();
+				dataObject2.Name="Asd";
+				dataObject2.Surname="Efd";
+				var innerInhalt2:ArrayCollection  = new ArrayCollection();
+				innerInhalt2.addItem("111");
+				innerInhalt2.addItem("52255");
+				innerInhalt2.addItem("663436");
+				dataObject2.Phones= innerInhalt2;
+				dynamicData.addItem(dataObject2); */
+				
+			}
+			 
+		]]>
+	</mx:Script>
+</mx:Canvas>
+

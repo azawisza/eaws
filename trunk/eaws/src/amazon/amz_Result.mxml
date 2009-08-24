@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="172" 
+	initialize="{init()}"
+	implements="web.WebServiceListener"
+	xmlns:amazon="amazon.*" xmlns:itemRenderer="flexunit.flexui.controls.left.itemRenderer.*">
+
+    <mx:Sequence id="glowLabelSequence" repeatCount="0">
+       <mx:Glow id="glowLabelLowesPrice" duration="1000" alphaFrom="1.0" alphaTo="0.4" blurXFrom="0.0" blurXTo="60.0" blurYFrom="0.0" blurYTo="50.0" color="0x22A060"/>
+       <mx:Glow id="unGlowLabelLowesPrice" duration="1000" alphaFrom="0.4" alphaTo="1.0" blurXFrom="60.0" blurXTo="0.0" blurYFrom="50.0" blurYTo="0.0" color="0x3370DD"/>
+    </mx:Sequence>
+    
+<mx:HBox height="100%" width="100%" x="0" y="0" horizontalAlign="center">
+
+	<mx:TabNavigator width="100%" height="100%"
+		
+		>
+		<mx:Canvas label="Amzazon" width="100%" height="100%" borderStyle="none" cornerRadius="12">
+		<mx:HBox width="100%"  height="100%" left="0">
+				<mx:Image height="100%" width="175" verticalAlign="middle" horizontalAlign="center" alpha="1.0" id="amzImage"
+					source="{data.MediumImage_URL}"
+					click="myURLRequest()"
+					useHandCursor="true"
+					buttonMode="true"
+					toolTip="Click to enlarge"
+					mouseChildren="false"
+					 cacheAsBitmap="true" cachePolicy="auto" errorColor="#AFB5B6">
+					
+	</mx:Image>
+			
+		<mx:VBox width="70%" height="100%">
+			<mx:VBox width="711" height="40%">
+				<mx:TextArea width="100%"  click="navigateToURL(new URLRequest(data.DetailPageURL), '_blank')" height="100%"
+					id="amzTitle"
+					text="{data.Title}"
+					editable="false"
+				useHandCursor="true"
+					buttonMode="true"
+					toolTip="{data.Title}"
+					mouseChildren="false"
+					 cornerRadius="12" fontSize="16" fontWeight="bold">
+					
+				</mx:TextArea>
+			</mx:VBox>
+			
+			
+			<mx:HBox width="100%" height="100%">
+			<mx:Form width="100%" height="100%" horizontalGap="1" indicatorGap="5" paddingTop="3" textIndent="0" verticalGap="0" borderStyle="solid" cornerRadius="12">
+					<mx:FormItem label="Price">
+						<mx:LinkButton id="amzPrice" label="{data.ListPriceNative}"  click="navigateToURL(new URLRequest(data.DetailPageURL), '_blank')"/> 
+					</mx:FormItem>
+					<mx:FormItem label="Used">
+						<mx:Label text="{data.LowestUsedPriceNative}" truncateToFit="true" id="amzPriceUsed"/>
+					</mx:FormItem>
+					<mx:FormItem label="New">
+						<mx:Label text="{data.LowestNewPriceNative}" id="amzLowestNew"
+							
+							
+							 />
+					</mx:FormItem>
+				</mx:Form>
+				<mx:Form width="100%" height="100%" indicatorGap="1" paddingTop="5" textIndent="0" verticalGap="0" borderStyle="solid" cornerRadius="12">
+					<mx:FormItem label="Manufacturer">
+						<mx:Label text="{data.Manufacturer}" id="amzManufacturer"/>
+					</mx:FormItem>
+					<mx:FormItem label="Model">
+						<mx:Label text="{data.Model}" id="amzModel"/>
+					</mx:FormItem>
+					
+					<mx:FormItem label="Full review"  id="cnetFullrev" visible="true" >
+						
+						<mx:LinkButton  label="here"
+							 click="navigateToURL(new URLRequest(data.dataObjectCnet.reviewURL), '_blank')"
+							 enabled="{data.dataObjectCnet!=null}"
+							 id="cnetLink"/>
+					</mx:FormItem>
+				</mx:Form>
+				
+				
+					<mx:Form horizontalGap="1" indicatorGap="5" paddingTop="3" textIndent="0" verticalGap="0"
+					
+					id="cnetData"
+					visible="true"
+					 height="80%"
+					 width="100%"
+					 >
+					<mx:FormItem label="Star rating" visible="true">
+						<mx:Label text="{data.dataObjectCnet.editorsStarRatingValue+'/5'}"  id="cnetData1"/>
+					</mx:FormItem>
+					<mx:FormItem label="Editors rating" >
+						<mx:Label text="{data.dataObjectCnet.editorsRatingValue+'/10'}"  id="cnetData2"/>
+					</mx:FormItem>
+					
+						<mx:LinkButton left="0" toolTip="Lowest price !!!" right="0" top="0" bottom="0" label="{data.lowestPriceFormatted}"  creationCompleteEffect="{glowLabelSequence}"  id="lowestPrice" click="navigateToURL(new URLRequest(data.lowestPriceUrl), '_blank')"   fontSize="12"/>
+					
+				</mx:Form>
+				
+				
+			</mx:HBox>
+			
+		</mx:VBox>
+		
+	</mx:HBox>
+	
+		</mx:Canvas>
+		<mx:Canvas label="eBay" width="100%" height="100%">
+		<mx:HBox width="100%" height="100%">
+			<mx:Image height="100%" width="175" verticalAlign="middle" horizontalAlign="center" alpha="1.0" id="amzImageEBay"
+					source="{data.MediumImage_URL}"
+					click="myURLRequest()"
+					useHandCursor="true"
+					toolTip="Click to enlarge"
+					buttonMode="true"
+					mouseChildren="false"
+					cacheAsBitmap="true" cachePolicy="auto" errorColor="#AFB5B6">
+			</mx:Image>
+				
+					<mx:DataGrid width="80%" height="100%" headerHeight="20" selectable="true" id="eBayGrid"
+				visible="true" dataProvider="{data.dataObjectEBayList}"
+				itemClick="{onItemClickForEBayGrid(event)}"
+				>
+				<mx:columns>
+					<!--<mx:DataGridColumn labelFunction="{displayPersonInfo(data.dataObjectEBayListXML),eBayGrid}"/>
+					<mx:DataGridColumn headerText="{data.Title}">
+						<mx:itemRenderer>
+				<mx:Component>
+				</mx:Component>
+			</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn headerText="{data.dataObjectEBayList BidCount}"/>-->
+					<mx:DataGridColumn headerText="Description" labelFunction="loadEbayAlt" />
+					
+					<mx:DataGridColumn headerText="Bids" labelFunction="loadEbayAlt" width="40"/>
+					<mx:DataGridColumn headerText="BuyNow" labelFunction="loadEbayAlt" width="60"/>
+					<mx:DataGridColumn headerText="Price/FixedPrice" labelFunction="loadEbayAlt" width="200"/>
+					<mx:DataGridColumn headerText="Visit" labelFunction="loadEbayAlt" width="40" visible="false"/>
+						
+					
+				
+				</mx:columns>
+				
+			</mx:DataGrid>
+			
+		
+			
+				
+			</mx:HBox>
+	
+		</mx:Canvas>
+	
+	</mx:TabNavigator>
+</mx:HBox>
+<mx:Script>
+	<![CDATA[
+	/*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+		import engine.StateMachine;
+		import mx.events.ListEvent;
+		import mx.logging.Log;
+		import mx.logging.ILogger;
+		import web.data.DataObjectEBay;
+		import application.IStart;
+		import web.service.Currencies;
+		import application.Conf;
+		import web.data.DataObjectAmazon;
+		import cmd.Invoker;
+		import cmd.cmd_CNETCall;
+		import web.data.DataObjectCNET;
+		import mx.binding.utils.BindingUtils;
+		import mx.collections.ArrayCollection;
+		import mx.controls.dataGridClasses.DataGridColumn;
+		
+		public var dataa:Object= null;
+    	private static var logger:ILogger = Log.getLogger("fx2");
+		
+		
+		
+		 //defionitions of label function
+		 private function loadEbayAlt(item:Object, column:DataGridColumn):String{
+		 	//item - data from data provider.
+		 	//column - column to manage it.
+		 	logger.debug("Processing data for insertion ....................."+(item as DataObjectEBay).Title);
+		 	if(column.headerText=="Description") {
+		 		//click="navigateToURL(new URLRequest(data.DetailPageURL)
+		 		
+		 		return (item as DataObjectEBay).Title;
+		 	}
+		 	
+		 	if(column.headerText=="Bids")return (item as DataObjectEBay).BidCount;
+		 	if(column.headerText=="BuyNow")return (item as DataObjectEBay).ConvertedBuyItNowPrice;
+		 	if(column.headerText=="Price")return (item as DataObjectEBay).ConvertedCurrentPriceNative;
+		 	if(column.headerText=="Visit")return (item as DataObjectEBay).ViewItemURLForNaturalSearch;
+		 	return "N/A"
+		 	
+		 }
+		 
+		 	public function onItemClickForEBayGrid(eve:ListEvent):void {
+		 		if(eBayGrid.selectedItem!= null){
+						trace("ebURL>"+eBayGrid.selectedItem.ViewItemURLForNaturalSearch);
+						trace("ebURL>"+eBayGrid.selectedItem.Title);
+						//
+						navigateToURL(new URLRequest(eBayGrid.selectedItem.ViewItemURLForNaturalSearch), '_blank')
+					}else {
+						logger.warn("eBayGrid.selectedItem= NULL::Binded eBay data not received yet. This is subject to change.");
+					}
+			}
+		
+		
+		/**loading data about amazon updated by sys_Viewer delivered by WSSeviceSubjcet
+		 * Performing call to CNET and eBay if available or requitred.
+		 * */
+		private function init():void {
+			   logger.debug("Initializaing new Item display element");
+			  // var com:cmd_CNETCall= new cmd_CNETCall(this.Manufacturer,this.Model,this);
+			  // Invoker.getInstance().addCommand(com);
+			   
+			   //amzLowestNew.text=this.LowestNewPrice_Amount;
+			   //amzManufacturer.text=this.Manufacturer;
+			   //amzModel.text= this.Model;
+			  // amzPrice.label=this.ListPrice_Amount;
+			  // amzPriceUsed.text=this.LowestUsedPrice_Amount;
+			  // amzTitle.text=this.Title;
+			 //  amzImage.source=this.MediumImage_URL;
+			
+			   
+                
+		}
+		/**
+		 * Currency convertor
+		 * */
+		public function priceConverter(price:String){
+			var src:Number= new Number(price);
+			var dest:Number = new Number(Currencies.getInstance().gerCurrencyRateInPLN());
+			logger.debug("Currency converter");
+			logger.debug("SRC: "+src);
+			logger.debug("DST: "+dest);
+			
+			
+		}
+		
+		
+		
+		private  var eBayGridV:Boolean = false;
+		private  var	eBayPbarV:Boolean=true;
+		
+		
+		private function timerEndHandler(teven:TimerEvent):void {
+			logger.debug("timer ended !");
+			var raw:Object=new Object();
+			raw.title="Super hiper power intergalactic robo droid";
+			raw.price="free";
+			raw.pricePLN="free";
+			datax.addItem(raw);
+			
+			eBayPbarV=false;
+			eBayGridV=true;
+			
+			//cnetPbar.setVisible(false);
+			
+			
+			//if(eBayPbar!=null)eBayPbar.setVisible(false);
+            //if(eBayGrid!=null)eBayGrid.setVisible(true);
+			
+			
+			/*cnetPbar.width=0;
+			cnetPbar.height=0;
+			cnetPbar.setVisible(false);
+			*/
+			cnetData.width=245;
+			cnetData.height=85;
+			cnetData.setVisible(true);
+			
+			cnetFullrev.setVisible(true);
+			
+			//cnetData1.setVisible(true);
+			//cnetData2.setVisible(true);
+			//cnetData3.setVisible(true);
+			cnetData.setVisible(true);
+			cnetFullrev.setVisible(true);
+			
+		
+			
+		}
+		private var timer:Timer = null;
+		
+		private function inVisible() : void {
+			//eBayGrid.setVisible(eBayGridV);
+			/*<mx:ProgressBar id="eBayPbar"
+					width="0"
+					height="0"
+			indeterminate="true"
+			 textAlign="center"
+			 labelPlacement="top"
+			 labelWidth="0"
+			 
+			 visible="{eBayPbarV}"
+			  x="584" y="10"/>*/
+			//eBayPbar.setVisible(eBayPbarV);	
+			
+		}
+		
+		[Bindable]
+		var datax:ArrayCollection= new ArrayCollection();
+		
+		
+		[Bindable]
+		private var dataSource:DataObjectCNET= null;
+		public function update(data:Object):void {
+			
+			logger.debug("\n\n UI component PRODUCT beeing updated with data (DataObjectCNET) from cnet search:\n");
+			//logger.debug((data as AmazonSearchResults).toString());
+			logger.debug("-----  ---- ---- ---- -----  --- Propagating data in interface");
+			logger.debug("");
+			this.dataSource= data as DataObjectCNET;
+			
+		}
+	
+		public function  myURLRequest(){
+			//var urlr:URLRequest = neRequest(imageURL,mode);
+			IStart.getInstance().openWindowImage(data.BigImage_URL,data.BigImage_Height,data.BigImage_Width,data.Title);
+		
+			
+			
+		}
+				
+
+	]]>
+</mx:Script>
+</mx:Canvas>
+
+
+
+

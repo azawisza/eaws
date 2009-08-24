@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="812" height="608"
+	creationComplete="init()"
+	>
+	<mx:HTTPService
+		id="xmlCNETService"
+		url="roomList.xml"
+		result="resultHandler(event)"
+		fault="faultHandler(event)"
+		requestTimeout="10"
+		/>
+		
+	
+	<mx:Script>
+		<![CDATA[
+		/*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			private function init():void{
+				
+			}
+			private function resultHandler(event:ResultEvent):void{
+				var resObject:Object=event.result;
+				restDataList.dataProvider=resObject.rooms.room;
+				trace("working with data received");
+				
+			}
+			private function faultHandler(event:FaultEvent):void {
+				Alert.show(event.toString(),"Error");
+				;
+			}
+			private function sendRequest():void {
+				trace("sending request ...");
+				xmlCNETService.send();
+				trace("Request sent");
+			}
+		]]>
+	</mx:Script>
+	<mx:Label x="10" y="10" text="Data from XML REST call"/>
+	<mx:DataGrid x="10" y="36" enabled="false" width="792" height="562"
+		 id="restDataList"
+		/>
+	<mx:Button x="159" y="8" label="Button"
+		click="sendRequest()"
+		/>
+	
+	
+</mx:Canvas>

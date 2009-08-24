@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="vertical" xmlns:ns1="*" height="100%"
+	applicationComplete="{main()}"
+	implements="application.GeneralUIInterface"
+	  width="100%" xmlns:ns2="amazon.*" xmlns:loggingUI="loggingUI.*" xmlns:ns3="sandbox.*">
+		<mx:TabNavigator width="100%" height="100%">
+		<mx:Canvas label="Application" width="100%" height="100%">
+		<mx:TitleWindow width="100%" height="100%" layout="absolute" horizontalCenter="0" verticalCenter="0" title="Amazon enhanced search">
+		
+			<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="top">
+		
+		
+		<ns2:amz_Search width="100%" height="98" id="amzSearch" cornerRadius="8" backgroundColor="#8EA4AF">
+	</ns2:amz_Search>
+	<ns2:sys_Viewer width="100%" height="100%"
+		id="sys_viewer"
+		 cornerRadius="8">
+	</ns2:sys_Viewer>
+	</mx:VBox>
+		</mx:TitleWindow>
+	
+		</mx:Canvas>
+		<mx:Canvas label="FlexUnit" width="100%" height="100%">
+			<ns1:cmp_Test width="100%" height="100%" x="0" y="0">
+				
+			</ns1:cmp_Test>
+		</mx:Canvas>
+		<mx:Canvas label="utils" width="100%" height="100%">
+			<mx:TabNavigator x="10" y="10" width="100%" height="100%">
+				<mx:Canvas label="ebay" width="100%" height="100%">
+				<ns1:cmp_eBay>
+					
+				</ns1:cmp_eBay>
+				</mx:Canvas>
+				<mx:Canvas label="amazon" width="100%" height="100%">
+				<ns1:cmp_Amazon>
+					
+				</ns1:cmp_Amazon>
+				</mx:Canvas>
+				<mx:Canvas label="cnet" width="100%" height="100%">
+				<ns1:cmp_CNET>
+					
+				</ns1:cmp_CNET>
+				</mx:Canvas>
+				<mx:Canvas label="test" width="100%" height="100%">
+				<ns1:cmp_test1>
+					
+				</ns1:cmp_test1>
+				</mx:Canvas>
+				<mx:Canvas label="ColorText" width="100%" height="100%">
+					<ns3:ColorText x="0" y="0" width="100%" height="100%">
+					</ns3:ColorText>
+				</mx:Canvas>
+				<mx:Canvas label="dataGridBuilder" width="100%" height="100%">
+				<ns3:DGTest x="10" y="10" height="332" width="594">
+					
+				</ns3:DGTest>
+				</mx:Canvas>
+				<mx:Canvas  label="glow">
+					<ns3:GlowFX>
+						
+					</ns3:GlowFX>
+				</mx:Canvas>
+			</mx:TabNavigator>
+		</mx:Canvas>
+		<mx:Canvas label="Console" width="100%" height="100%">
+		<loggingUI:cmp_console  width="100%" height="100%">
+			
+		</loggingUI:cmp_console>
+		
+		
+		</mx:Canvas>
+	</mx:TabNavigator>
+	
+		
+		
+
+	
+	
+	<!--<mx:TextArea x="238" y="261" width="100%" height="100%" editable="false" text="some text&#xa;"/>
+	-->
+
+	
+		<mx:Script>
+			<![CDATA[
+			/*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+				import loggingUI.cmp_console;
+				import loggingUI.TextAreaTarget;
+				import application.FloatingLoggerWindow;
+				import mx.logging.Log;
+				import mx.logging.ILogger;
+				import amazon.amz_Search;
+				import application.UIFacade;
+				import cmd.ui.ui_InitializeApplication;
+				import cmd.Invoker;
+				import engine.StateMachine;
+				import application.IStart;
+				import cmd.cmd_CNETCall;
+				
+				import cmd.Start;
+				import cmd.cmd_eBayCall;
+				//import application.IStart;
+				private static var logger:ILogger = Log.getLogger("fx2");
+				public   function  main():void {
+					
+					IStart.createInstance(this);
+					trace("Initializing window subcomponent IStart");
+					Invoker.getInstance().addCommand(new ui_InitializeApplication());
+					Invoker.getInstance().invoke();
+					trace("Initializing engine");
+					
+					//var tat:TextAreaTarget = new TextAreaTarget();
+//					TextAreaTarget.instance.registerTextAreaLogger(new FloatingLoggerWindow());
+				}
+				public function openimode():void {
+					
+						
+				}
+				public function ebay():void {
+					Start.initLogging();
+					Start.initConf();
+					
+					//var ebcall:cmd 
+					
+					//ecall.execute();
+					
+				}
+				public function cnet() : void {
+					Start.initLogging();
+					Start.initConf();
+					//var ecall:cmd_CNETCall=new cmd_CNETCall("samsung","",);
+				//	ecall.execute();
+				}
+			public function showResultGrid():void {
+				sys_viewer.showResultGrid();
+			}
+			public function setBrowseResultsLabel(txt:String):void {
+				amzSearch.setBrowseResultsLabel(txt);
+			}	
+						
+		
+			]]>
+			
+		</mx:Script>
+	
+</mx:Application>

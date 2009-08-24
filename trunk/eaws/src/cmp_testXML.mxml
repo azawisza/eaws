@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="1100" height="946" creationComplete="init()">
+	<mx:Button x="10" y="10" label="Perform" />
+	<mx:HTTPService id="serv"
+		url="http://api.cnet.com/rest/v1.0/techProductSearch?partKey=22569241417921932475142053432913&amp;query=samsung&amp;iod=Cbreadcrumb&amp;start=0&amp;limit=3"
+		result="resultHandler(event)"
+		fault="faultHandler(event)"
+		>
+		
+	</mx:HTTPService>
+	<mx:Script>
+		<![CDATA[
+		/*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+			import mx.events.ListEvent;
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.ResultEvent;
+		
+			[Bindable]
+			private var rez:ArrayCollection= new ArrayCollection();
+			private function init():void {
+				serv.send();
+			}
+			private function faultHandler(event:FaultEvent):void {
+				Alert.show("Problem","Error");
+			}
+			private function resultHandler(event:ResultEvent):void {
+				rez=event.result.CNETResponse.TechProducts.TechProduct;
+				var str:String=event.result.CNETResponse.TechProducts.TechProduct.EditorsRating ;
+				grid.dataProvider=rez;
+				
+				for(var i:int=0;i<rez.length;i++){
+					trace("___>"+rez.getItemAt(i));
+					
+				}
+			}
+			private function changeHandler(event:ListEvent):void{
+				
+			}
+		]]>
+	</mx:Script>
+	<mx:TextInput x="92" y="10" id="tin">
+		<mx:text></mx:text>
+	</mx:TextInput>
+	<mx:List x="10" y="40" width="1080" height="866" id="grid" 
+		labelField="EditorsRating"
+		itemClick="changeHandler(event)"
+		
+		></mx:List>
+	
+</mx:Canvas>

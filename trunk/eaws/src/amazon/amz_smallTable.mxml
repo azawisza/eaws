@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="684" height="300">
+	<mx:DataGrid x="10" y="10" width="605" height="132" headerHeight="1" dataProvider="{arrColl}">
+		<mx:columns>
+			<mx:DataGridColumn headerText="Column 1" dataField="col1" width="40" />
+			<mx:DataGridColumn headerText="Column 2" dataField="label" width="40" />
+			<mx:DataGridColumn headerText="Column 3" dataField="col3" width="40"/>
+			<mx:DataGridColumn headerText="Column 4" dataField="label1" width="40" />
+			<mx:DataGridColumn headerText="Column 5" dataField="col5" width="40"/>
+		</mx:columns>
+	</mx:DataGrid>
+	
+ <mx:ArrayCollection id="arrColl">
+        <mx:source>
+            <mx:Array>
+                <mx:Object label="Student A" score="85" />
+                <mx:Object label="Student B" score="48" />
+                <mx:Object label="Student C" score="71" />
+                <mx:Object label1="Student D" score="88" />
+                <mx:Object label1="Student E" score="24" />
+                <mx:Object label1="Student F" score="64" />
+              </mx:Array>
+             </mx:source>
+             </mx:ArrayCollection>
+             <mx:Script>
+             	<![CDATA[
+             		/*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+             	]]>
+             </mx:Script>
+             	
+</mx:Canvas>

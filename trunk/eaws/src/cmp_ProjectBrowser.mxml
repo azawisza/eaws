@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="672" height="476">
+	<mx:Label x="10" y="10" text="JCTimer open source project." fontWeight="bold"/>
+	<mx:Text x="10" y="36" text="The main goal of project is to create application for personal use, to improve preparations for various&#xa;programming examinations and certificates. It consists of simple timer, alarm clock, simple register of&#xa;taken tests, self-assessment module, statistics, screenshot capture and simple blogging software" width="575" height="61"/>
+	<mx:Label x="10" y="95" text="Technologies"/>
+	<mx:Text x="10" y="121" text="Java j2se5, SWT, XML-RPC&#xa;JUnit, Log4J, UML, Eclipse&#xa;GoF design patterns&#xa;" width="575" height="50"/>
+	<mx:Label x="10" y="179" text="Files"/>
+	<mx:Script>
+		<![CDATA[
+			/*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+		]]>
+	</mx:Script>
+</mx:Canvas>

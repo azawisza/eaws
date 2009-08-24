@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="538">
+		
+<mx:Form x="10" y="10" width="336" height="280">
+		<mx:FormItem label="URL">
+			<mx:TextInput  text="http://webservices.amazon.com/onca/xml?Service=AWSECommerceService" width="161" id="rgURL"/>
+		</mx:FormItem>
+		<mx:FormItem label="ID">
+			<mx:TextInput
+				text="1K9F7ZQ6BZ5A0QEV76R2"
+				 id="rgID"/>
+			
+		</mx:FormItem>
+		<mx:FormItem label="Operation">
+			<mx:TextInput text="ItemSearch" id="rgOperation"/>
+		</mx:FormItem>
+		<mx:FormItem label="SearchIndex">
+			<mx:TextInput text="PCHardware" id="rgSearchIndex"/>
+		</mx:FormItem>
+		<mx:FormItem label="Keywords">
+	     	<mx:TextInput text="samsung" id="rgKeywords"/>
+		</mx:FormItem>
+		<mx:FormItem label="ResponseGroup">
+			<mx:TextInput text="ItemAttributes,Images,OfferSummary" width="165" id="rgResGroup"/>
+		</mx:FormItem>
+		<mx:FormItem label="ItemPage">
+			<mx:TextInput text="1" id="rgPage"/>
+		</mx:FormItem>
+		<mx:FormItem label="Availability">
+			<mx:TextInput id="rgAvailability"/>
+		</mx:FormItem>
+		<mx:FormItem label="Sort">
+			<mx:TextInput text="salesrank" id="rgSort"/>
+		</mx:FormItem>
+	</mx:Form>
+	
+	<mx:TextArea x="10" y="327" width="336" height="131"
+		id="resrQueryArea"
+		
+		click="this.gneraterestQuery()"
+	/>
+
+	<mx:Button x="10" y="298" label="Generate REST call"
+		 id="rgGenerate"
+		 click="{
+		 gneraterestQuery();
+			 
+		 }"
+		 />
+	<mx:Script>
+		<![CDATA[
+		/*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+			import cmd.cmd_RetriveRESTXMLData;
+			import cmd.Invoker;
+			private function gneraterestQuery():String{
+
+				var rQuery:String ="";
+				rQuery=rgURL.text+"&"+
+				"&AWSAccessKeyId="+rgID.text+
+				"&Operation="+rgOperation.text+
+				"&SearchIndex="+rgSearchIndex.text+
+				"&Keywords="+rgKeywords.text+
+				"&ResponseGroup="+rgResGroup.text+
+				"&ItemPage="+rgPage.text;
+				if(rgAvailability.text!=""){
+					rQuery+="&Availability="+rgAvailability.text;
+				}
+				rQuery+="&Sort="+rgSort.text;
+				this.resrQueryArea.text=rQuery;
+				return rQuery;
+			}
+		
+			private function perform():void {
+				Invoker.getInstance().addCommand(new cmd_RetriveRESTXMLData(resrQueryArea.text,cmd_RetriveRESTXMLData.AMAZON));
+				Invoker.getInstance().invoke();
+			}
+		]]>
+	</mx:Script>
+	<mx:Button x="10" y="466" label="Perform"
+		click="perform()"
+		
+		/>
+
+</mx:Canvas>
