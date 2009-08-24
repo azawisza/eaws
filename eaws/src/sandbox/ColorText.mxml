@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300">
+	<mx:TextArea x="0" y="41" width="400" height="259" id="txtArea"
+	
+		
+		 editable="true" wordWrap="true"/>
+	<mx:ColorPicker x="10" y="12" id="txtColorA"
+		change="{setCurrentColor(event)}"
+		/>
+    <mx:ColorPicker x="40" y="11" id="txtColorB"
+		change="{setCurrentColor(event)}"
+		/>
+	<mx:Button x="130" y="11" label="Add1" click="{insertTxtA(event)}" />
+	<mx:Button x="70" y="11" label="Add2" click="{insertTxtB(event)}" />
+	<mx:TextInput x="194" y="11" width="196" id="txt2Input"
+		
+		/>
+	<mx:Script>
+		<![CDATA[
+		/*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+			public function insertTxtA(eve:Event):void {
+				
+				txtArea.htmlText+=("<p class=\"a\">"+txt2Input.text+"</p>");
+				trace(txtArea.htmlText);
+			
+			}
+				public function insertTxtB(eve:Event):void {
+				txtArea.htmlText+=("<p class=\"b\">"+txt2Input.text+"</p>");
+			trace(txtArea.htmlText);
+			
+			}
+		
+			var s1:uint= 0;
+			var s2:uint= 0;
+			private function setCurrentColor(eve:Event){
+			  var css:String = "p.a {color: "+ getHexString(txtColorA.selectedColor)+";} p.b {color:"+getHexString(txtColorB.selectedColor)+";}";
+			  trace(css);
+                // Convert text to style sheet.
+                styleSheet = new StyleSheet();
+                styleSheet.parseCSS(css);
+                                //styleSheet.
+                // Set the style sheet.
+                txtArea.styleSheet = styleSheet;
+			}
+			 private var styleSheet:StyleSheet;
+    
+	
+			
+            private function colorChanger(evt:Event):void {
+            	
+              
+            }
+            /**
+            * Username:	GWD
+Website:	greg-dove.com
+Message Posts:	2017
+Joined:	06/24/2002 02:30:49 AM
+Last Visited On:	11/13/2008 07:16:31 PM
+Average Posts Per Day:	0.86
+Status:	http://www.adobe.com/cfusion/webforums/forum/messageview.cfm?forumid=15&catid=665&threadid=1398532&enterthread=y
+            * */
+public function getHexString(value:uint):String{
+	
+	return "#"+("00000"+value.toString(16).toUpperCase()).substr(-6);
+	
+}
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>
+

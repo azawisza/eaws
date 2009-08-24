@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"  width="677" height="394">
+    <mx:Script>
+        <![CDATA[
+            import mx.effects.easing.*;                   
+        ]]>
+    </mx:Script>
+
+    <mx:Sequence id="glowLabelSequence" repeatCount="0">
+       <mx:Glow id="glowLabelLowesPrice" duration="1000" alphaFrom="1.0" alphaTo="0.4" blurXFrom="0.0" blurXTo="60.0" blurYFrom="0.0" blurYTo="50.0" color="0x22A060"/>
+       <mx:Glow id="unGlowLabelLowesPrice" duration="1000" alphaFrom="0.4" alphaTo="1.0" blurXFrom="60.0" blurXTo="0.0" blurYFrom="50.0" blurYTo="0.0" color="0x3370DD"/>
+    </mx:Sequence>
+        
+    <mx:Panel title="Sequence Effect" layout="vertical" color="0xffffff" borderAlpha="0.15" width="500" paddingTop="10" 
+    	paddingRight="10" paddingBottom="10" paddingLeft="10" horizontalAlign="center">
+         
+  
+        <mx:Image id="flex" source="file:///C|/Documents and Settings/arzaw.NOWYFOLDER.000/Pulpit/asd.jpg" creationCompleteEffect="{glowLabelSequence}"/>
+
+    </mx:Panel>
+    
+</mx:Canvas>
+<!--
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300">
+	<mx:Label x="172" y="72" text="Label"   creationCompleteEffect="{glow.play()}" id="mlab"/>
+	<mx:Sequence id="glow" target="mlab" repeatCount="100">
+	<mx:Glow id="glowImage" duration="1000" alphaFrom="1.0" alphaTo="0.3" blurXFrom="0.0" blurXTo="50.0" blurYFrom="0.0" blurYTo="50.0" color="0x22A050"/>
+    <mx:Glow id="unglowImage" duration="1000" alphaFrom="0.3" alphaTo="1.0" blurXFrom="50.0" blurXTo="0.0" blurYFrom="50.0" blurYTo="0.0" color="0x3380DD"/>
+    
+    </mx:Sequence>
+</mx:Canvas>
+-->

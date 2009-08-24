@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	implements="web.WebServiceListener"
+	width="1626" height="720" >
+	<mx:Form x="10" y="6" width="354" height="82">
+		
+		<mx:FormItem label="URL">
+			<mx:TextInput id="rgURL" text="http://api.cnet.com/rest/v1.0/techProductSearch?" width="248"/>
+		</mx:FormItem>
+		<mx:FormItem label="Key">
+			<mx:TextInput id="rgPartKey" text="22569241417921932475142053432913" width="246"/>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:Button x="180" y="303" label="Get REST CNET data" width="184" id="rgButton"/>
+	<mx:Script>
+			<![CDATA[
+			/*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+				import web.service.WSResultParserCNETOld;
+				import web.service.WSResultParserCNET;
+				import mx.collections.XMLListCollection;
+				import mx.rpc.soap.WebService;	
+				import web.WebServiceSubject;
+				import cmd.cmd_TestAWS;
+				import cmd.Invoker;
+				import tools.HashMap;
+				import tools.Entry;
+				import mx.collections.ArrayCollection;
+				import flash.debugger.enterDebugger;	
+				import cmd.cmd_RetriveRESTXMLData;
+		var optionalDataMap:HashMap= new HashMap();
+		var orderBy:HashMap= new HashMap();
+		private function init():void {
+			WSResultParserCNETOld.getInstance().regsiterWebServiceListener(this);
+			optionalDataMap.put("requested categories","Cbreadcrumb");
+			optionalDataMap.put("related categories","relatedCats");
+			optionalDataMap.put("pricing and total offers","ChlPrice");
+			optionalDataMap.put("offers","Coffers");
+			optionalDataMap.put("none","none");
+			optionalDataMap.put("good/bad/bottom line","goodBad");
+			optionalDataMap.put("user raiting info","userRatings");
+	/*http://api.cnet.com/rest/v1.0/techProductSearch?
+partKey=22569241417921932475142053432913&
+query=ipod&
+criteria=minOffers%3D1%7ChasGoodBad%3Dtrue&
+iod=none%2Cbreadcrumb%2CrelatedCats%2ChlPrice%2Coffers%2CgoodBad%2CuserRatings&
+orderBy=editorsRatingAndReviewDate&
+start=0&
+limit=10
+*/		
+			orderBy.put("default","");
+			orderBy.put("popularity","popularity");
+			orderBy.put("editors rating","editorsRating");
+			orderBy.put("price","price");
+			orderBy.put("manufacturer","manufacturerName");
+			orderBy.put("product name","productName");
+			orderBy.put("publish date","publishDate");
+			orderBy.put("review date","reviewDate");
+			orderBy.put("user rating","userRating");
+			orderBy.put("user rating popularity","userRatingAndPopularity");
+			orderBy.put("editors rating review date","editorsRatingAndReviewDate");
+			//filling UI elements
+			fillInLists();
+			//adding action to button
+			rgButton.addEventListener(MouseEvent.CLICK,rgButtonAction);
+			restServiceCallButton.addEventListener(MouseEvent.CLICK,restServiceCall);
+			
+		}
+		private function fillInLists():void{
+			rgOptionalDataList.dataProvider=optionalDataMap.keySet();
+			rgOrderBy.dataProvider=orderBy.keySet();
+			
+		}
+		
+		private function rgButtonAction(event:MouseEvent):void{
+			
+			
+			var output:String = "";
+			output+=rgURL.text;
+			output+="partKey="+rgPartKey.text+"&";
+			output+="query="+rgQuery.text+"&";
+			if(rgOptionalDataList.value!=null)output+="iod="+optionalDataMap.getValue(rgOptionalDataList.selectedItem.toString())+"&";
+			if(rgOrderBy.text!="default")output+="orderBy="+orderBy.getValue(rgOrderBy.text)+"&";
+			output+="start="+rgStart.value+"&";
+			output+="limit="+rgLimit.value+"&";
+			rgQueryText.text=output;
+		}
+		private function restServiceCall(event:MouseEvent):void {
+			trace("Calling REST service CNET");
+			Invoker.getInstance().addCommand(new cmd_RetriveRESTXMLData(rgQueryText.text,cmd_RetriveRESTXMLData.CNET));
+			Invoker.getInstance().invoke();
+			
+		}
+		public function update(subject:Object ):void{
+			//restServiceDataGrid.dataProvider = ((subject as WSResultParserCNET).getState() as XMLListCollection);
+			
+		}	
+		private function performCNETCall():void {
+			
+		}		
+		//EditorsChoice
+		//EditorsRating
+		//EditorsStarRating
+		//id
+		//ImageURL
+		//Name
+		//PriceURL
+		//PublishDate
+		//ReviewURL
+		//SKU
+		//Specs
+		//xlink:href
+		
+		]]>
+	</mx:Script>
+	<mx:List x="10" y="122" id="rgOptionalDataList" allowDragSelection="true" creationComplete="init()" enabled="true" allowMultipleSelection="true" height="203" selectedIndex="0"></mx:List>
+	<mx:Label x="10" y="96" text="Optional data"/>
+
+	<mx:Label x="180" y="96" text="Order by"/>
+	<mx:ComboBox x="180" y="123" id="rgOrderBy" width="184"></mx:ComboBox>
+	<mx:CheckBox x="180" y="153" label="Sort descending" id="rgSortDescending"/>
+	<mx:Form x="180" y="183" width="184" height="82">
+		<mx:FormItem label="Limit">
+			<mx:NumericStepper id="rgLimit" value="3" minimum="3"/>
+		</mx:FormItem>
+		<mx:FormItem label="Start with">
+			<mx:NumericStepper id="rgStart"/>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:TextInput id="rgQuery" text="samsung" x="180" y="273" width="184"/>
+	<mx:TextArea x="10" y="333" width="354" height="143" id="rgQueryText"/>
+	<mx:Button x="372" y="10" label="Perform XML service call" id="restServiceCallButton"
+		click="performCNETCall()"
+		
+		 enabled="false"/>
+	<mx:DataGrid x="10" y="484" width="1223" height="670" 
+		id="restServiceDataGrid"  dataProvider="{WSResultParserCNETOld.getInstance().doa.dataObjectCnet}"  enabled="false">
+
+		
+		<mx:columns>
+			<mx:DataGridColumn headerText="DetailPageURL" dataField="DetailPageURL" />
+			<mx:DataGridColumn headerText="EditorsRating" dataField="EditorsRating" />
+			<mx:DataGridColumn headerText="EditorsStarRating" dataField="EditorsStarRating"/>
+			<mx:DataGridColumn headerText="id" dataField="id"/>
+			<mx:DataGridColumn headerText="ImageURL" dataField="ImageURL"/>
+			<mx:DataGridColumn headerText="Name" dataField="Name"/>
+			<mx:DataGridColumn headerText="PriceURL" dataField="PriceURL"/>
+			<mx:DataGridColumn headerText="PublishDate" dataField= "PublishDate"/>
+			<mx:DataGridColumn headerText="ReviewURL" dataField="ReviewURL"/>
+			<mx:DataGridColumn headerText="SKU" dataField="SKU"/>
+			<mx:DataGridColumn headerText="Specs" dataField="Specs"/>
+			<mx:DataGridColumn headerText="xlink:href" dataField="xlink:href"/>
+			
+		</mx:columns>
+
+	
+		
+	</mx:DataGrid>
+	
+	
+
+	
+</mx:Canvas>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

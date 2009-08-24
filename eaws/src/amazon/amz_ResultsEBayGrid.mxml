@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:DataGrid xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:columns>
+		<mx:DataGridColumn labelFunction="getTitle">
+			
+		</mx:DataGridColumn>
+	</mx:columns>
+	<mx:Script>
+		<![CDATA[
+		/*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+			import web.data.DataObjectEBay;
+			override public function set data(value:Object):void {
+				trace("DATA CALLLLLLLLLLLLLing");
+				super.data = value;
+				this.dataProvider = this.data.ebay;
+			}
+			 private function 
+        getTitle(item:Object, column:DataGridColumn):String
+      {
+      	trace("------");
+      	trace(""+(item as XML).toString());
+        trace("------");
+      	if( item is XMLList )trace("This is XML object!!!!"+(item as XML).Title);
+      	trace((item as XML).Title);
+        return (item as XML).Title;
+        //return "dd";
+      }
+		]]>
+	</mx:Script>
+</mx:DataGrid>
+	
+	

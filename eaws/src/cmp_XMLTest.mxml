@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300">
+	 <mx:Script>
+        <![CDATA[
+            // Model: XML structure describing 
+            // some of the books in my collection.    
+            /*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+            [Bindable]
+
+            private var myBooks:XML = 
+                <books>
+                    <book ISBN="1590595181">
+
+                        <title>Foundation ActionScript Animation: Making Things Move</title>
+                        <author>Keith Peters</author>
+                        <amazonUrl>http://tinyurl.com/npuxt</amazonUrl>
+
+                        <pageCount>470</pageCount>
+                    </book>
+                    <book ISBN="1582346194">
+                        <title>Send in the Idiots: Stories from the Other Side of Autism</title>
+
+                        <author>Kamran Nazeer</author>
+                        <amazonUrl>http://tinyurl.com/lo5ts</amazonUrl>
+                        <pageCount>500</pageCount>
+
+                    </book>
+                    <book ISBN="1590592212">
+                        <title>Flash 3D Cheats Most Wanted</title>
+                        <author>Aral Balkan et. al.</author>
+
+                        <amazonUrl>http://tinyurl.com/gsd7b</amazonUrl>
+                        <pageCount>256</pageCount>
+                    </book>
+
+                </books>
+            
+            private function initializeHandler():void
+            {
+
+             
+                var resultB:XMLList;
+                resultB = myBooks.book.(title.toString().search("Idiots")>-1);
+                
+                // Display the title of the found book.
+
+             //   bText.htmlText = "<ul><li>" + truncate(resultB.title, lineLength) + "</li></ul>";
+                
+                //
+
+                // Get the titles of all the books.
+                //
+                var resultC:XMLList;
+                resultC = myBooks.book.title;
+                trace(resultC.toXMLString());
+                
+           
+            }
+            
+            // Helper method: Truncate a string at a given character count. Tries
+            // to do this intelligently by truncating at a space if one exists in 
+
+            // the string (so that words are not truncated in the middle).
+            private function truncate ( str:String, numChars:uint, symbol:String = "..." ):String 
+            {
+
+                // Don't do anything if the string is shorter than the maximum value. 
+                if (str.length <= numChars) return str;
+                
+                // Search backward for a space in the string, starting with 
+                // the character position that was requested. 
+
+                var charPosition:uint = numChars-1;
+                while (str.charAt(charPosition) != " " && charPosition != 0)
+
+                {
+                    charPosition--; 
+                }
+                var truncateAt:uint = charPosition == 0 ? numChars : charPosition;
+                
+                // If the space is right before a punctuation mark, crop the 
+
+                // punctuation mark also (or else it looks weird).
+                var charBefore:String = str.charAt(truncateAt-1);
+                if (charBefore == ":" || charBefore == ";" 
+                    || charBefore == "." || charBefore == ",")
+
+                {
+                    truncateAt--;
+                }
+                
+                // Truncate the string.
+                var newString:String = str.substr(0, truncateAt);
+                newString += symbol;
+                
+                // Return the truncated string.
+
+                return newString;
+            } 
+            private function perform():void {
+            	trace("Start ...");
+            	initializeHandler();
+            	trace("... End");
+            }
+
+        ]]>
+</mx:Script>
+	 <mx:Button x="10" y="10" label="Button"
+	 	click="perform()"
+	 	/>
+	 <mx:TextArea x="10" y="40" width="380" height="250">
+	 	 <mx:text><![CDATA[<?xml version="1.0" encoding="UTF-8"?><ItemSearchResponse xmlns="http://webservices.amazon.com/AWSECommerceService/2005-10-05"><OperationRequest><HTTPHeaders><Header Name="UserAgent" Value="Mozilla/5.0 (Windows; U; Windows NT 5.1; pl; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3"></Header></HTTPHeaders><RequestId>0ZFBAVHWVTVV7728N6GG</RequestId><Arguments><Argument Name="SearchIndex" Value="PCHardware"></Argument><Argument Name="Sort" Value="salesrank"></Argument><Argument Name="ItemPage" Value="1"></Argument><Argument Name="Service" Value="AWSECommerceService"></Argument><Argument Name="Keywords" Value="Keywords"></Argument><Argument Name="ResponseGroup" Value="ItemAttributes,Images,OfferSummary"></Argument><Argument Name="Operation" Value="ItemSearch"></Argument><Argument Name="AWSAccessKeyId" Value="1K9F7ZQ6BZ5A0QEV76R2"></Argument></Arguments><RequestProcessingTime>0.0644540786743164</RequestProcessingTime></OperationRequest><Items><Request><IsValid>True</IsValid><ItemSearchRequest><ItemPage>1</ItemPage><Keywords>Keywords</Keywords><ResponseGroup>ItemAttributes</ResponseGroup><ResponseGroup>OfferSummary</ResponseGroup><ResponseGroup>Images</ResponseGroup><SearchIndex>PCHardware</SearchIndex><Sort>salesrank</Sort></ItemSearchRequest></Request><TotalResults>1</TotalResults><TotalPages>1</TotalPages><Item><ASIN>B00006AG1K</ASIN><DetailPageURL>http://www.amazon.com/Micro-Innovations-Wireless-Keyboard-TKB700U/dp/B00006AG1K%3FSubscriptionId%3D1K9F7ZQ6BZ5A0QEV76R2%26tag%3Dws%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3DB00006AG1K</DetailPageURL><SmallImage><URL>http://ecx.images-amazon.com/images/I/11ZZ5YGNYTL._SL75_.jpg</URL><Height Units="pixels">49</Height><Width Units="pixels">75</Width></SmallImage><MediumImage><URL>http://ecx.images-amazon.com/images/I/11ZZ5YGNYTL._SL160_.jpg</URL><Height Units="pixels">98</Height><Width Units="pixels">150</Width></MediumImage><LargeImage><URL>http://ecx.images-amazon.com/images/I/11ZZ5YGNYTL._SL500_.jpg</URL><Height Units="pixels">98</Height><Width Units="pixels">150</Width></LargeImage><ImageSets><ImageSet Category="primary"><SwatchImage><URL>http://ecx.images-amazon.com/images/I/11ZZ5YGNYTL._SL30_.jpg</URL><Height Units="pixels">20</Height><Width Units="pixels">30</Width></SwatchImage><SmallImage><URL>http://ecx.images-amazon.com/images/I/11ZZ5YGNYTL._SL75_.jpg</URL><Height Units="pixels">49</Height><Width Units="pixels">75</Width></SmallImage><MediumImage><URL>http://ecx.images-amazon.com/images/I/11ZZ5YGNYTL._SL160_.jpg</URL><Height Units="pixels">98</Height><Width Units="pixels">150</Width></MediumImage><LargeImage><URL>http://ecx.images-amazon.com/images/I/11ZZ5YGNYTL._SL500_.jpg</URL><Height Units="pixels">98</Height><Width Units="pixels">150</Width></LargeImage></ImageSet></ImageSets><ItemAttributes><Binding>Electronics</Binding><Brand>Micro Innovations</Brand><EAN>0788875900327</EAN><Feature>Batteries Included - Yes</Feature><Feature>Batteries Required - Yes</Feature><Feature>Color(s) - Black</Feature><Feature>Compatibility - Compaq iPAQ, Handspring, HP® Jornada, Palm, Sony® Clie Series</Feature><Feature>Connector/Port - Infrared</Feature><IsAutographed>0</IsAutographed><IsMemorabilia>0</IsMemorabilia><ItemDimensions><Weight Units="hundredths-pounds">42</Weight></ItemDimensions><KeyboardDescription>QWERTY</KeyboardDescription><Label>Micro Innovations</Label><ListPrice><Amount>219</Amount><CurrencyCode>USD</CurrencyCode><FormattedPrice>$2.19</FormattedPrice></ListPrice><Manufacturer>Micro Innovations</Manufacturer><Model>TKB700U</Model><MPN>TKB700U</MPN><ProductGroup>CE</ProductGroup><Publisher>Micro Innovations</Publisher><Studio>Micro Innovations</Studio><Title>Micro Innovations Wireless Link Keyboard (TKB700U)</Title><UPC>788875900327</UPC></ItemAttributes><OfferSummary><LowestNewPrice><Amount>8250</Amount><CurrencyCode>USD</CurrencyCode><FormattedPrice>$82.50</FormattedPrice></LowestNewPrice><LowestUsedPrice><Amount>3499</Amount><CurrencyCode>USD</CurrencyCode><FormattedPrice>$34.99</FormattedPrice></LowestUsedPrice><TotalNew>1</TotalNew><TotalUsed>2</TotalUsed><TotalCollectible>0</TotalCollectible><TotalRefurbished>0</TotalRefurbished></OfferSummary></Item></Items></ItemSearchResponse>]]></mx:text>
+	 </mx:TextArea>
+</mx:Canvas>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:AdvancedDataGrid xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml">
+   <mx:Script>
+     <![CDATA[
+     /*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+        override public function set data(value:Object):void
+        {
+           dataProvider = value;
+        }
+     ]]>
+   </mx:Script>
+
+  <mx:columns>
+    <mx:AdvancedDataGridColumn dataField="ProductId" headerText="Product ID" />
+    <mx:AdvancedDataGridColumn dataField="ProductName" headerText="Product Name" />
+    <mx:AdvancedDataGridColumn dataField="UnitPrice"  />
+    <mx:AdvancedDataGridColumn dataField="Discount"  />
+    <mx:AdvancedDataGridColumn dataField="Price"  />
+  </mx:columns>
+
+</mx:AdvancedDataGrid>
+

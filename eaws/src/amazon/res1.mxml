@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300">
+	<mx:Script>
+	<![CDATA[
+	/*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+		import mx.collections.HierarchicalData;
+		
+		private var masterData:Array = [
+ 			{ OrderId: 10248, CustomerId:"WILMK", EmployeeId:5, OrderDate:"1-Feb-2007", 
+    		children:[
+				    [
+				        {ProductId:11, ProductName:"Quesbo Cabrales", UnitPrice:14, Quantity:12, Discount:0, Price:168},
+				        {ProductId:42, ProductName:"Singaporean Hokkien Fried Mee", UnitPrice:9.8, Quantity:10, Discount:0, Price:98},
+				        {ProductId:42, ProductName:"Mozzarella di Giovanni", UnitPrice:34.8, Quantity:5, Discount:0, Price:174}
+				    ]
+ 					]},
+
+			 { OrderId: 10249, CustomerId:"TRADH", EmployeeId:6, OrderDate:"3-Feb-2007", 
+			     children:[
+			    [
+			        {ProductId:51, ProductName:"Manjimup Dried Appels", UnitPrice:42.4, Quantity:40, Discount:0, Price:1696},
+			        {ProductId:14, ProductName:"Tofu", UnitPrice:18.6, Quantity:9, Discount:0, Price:167.4}
+			    ]
+			 ]},
+
+			 { OrderId: 10250, CustomerId:"HANAR", EmployeeId:4, OrderDate:"4-Feb-2007", 
+			     children:[
+			     [
+			        {ProductId:51, ProductName:"Manjimup Dried Appels", UnitPrice:42.4, Quantity:35, Discount:0.15, Price:1261},
+			        {ProductId:41, ProductName:"Jack's Clam Chowder", UnitPrice:7.7, Quantity:10, Discount:0, Price:77},
+			        {ProductId:65, ProductName:"Hot pepper Sauce", UnitPrice:16.8, Quantity:10, Discount:0.15, Price:214.2}
+			     ]
+			 ]}
+	];
+
+	]]>
+</mx:Script>
+
+<mx:AdvancedDataGrid dataProvider="{new HierarchicalData(masterData)}" variableRowHeight="true" width="600" height="600">
+	<mx:columns>
+		<mx:AdvancedDataGridColumn dataField="OrderId" headerText="Ordere ID" width="100"/>
+		<mx:AdvancedDataGridColumn dataField="CustomerId" headerText="Customer ID" />
+		<mx:AdvancedDataGridColumn dataField="EmployeeId" headerText="Employee ID" />
+		<mx:AdvancedDataGridColumn dataField="OrderDate" headerText="Order Date" />
+	</mx:columns>
+	
+	<mx:rendererProviders>
+		<mx:AdvancedDataGridRendererProvider depth="2" columnIndex="1" renderer="DetailGrid" columnSpan="0" />
+	</mx:rendererProviders>
+</mx:AdvancedDataGrid>
+</mx:Canvas>

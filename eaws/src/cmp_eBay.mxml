@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="442">
+	<mx:Form x="10" y="10" width="380" height="233">
+		<mx:FormItem label="URL">
+			<mx:TextInput id="rgURL" text="http://open.api.ebay.com/shopping?version=517" width="242"/>
+		</mx:FormItem>
+		<mx:FormItem label="ID">
+			<mx:TextInput id="rgID" text="viewcomm-b107-41ff-937e-2739566c037e"  width="242"/>
+		</mx:FormItem>
+		<mx:FormItem label="Call name" width="335">
+			<mx:TextInput id="rgCallname" text="FindItemsAdvanced" width="286"/>
+		</mx:FormItem>
+		<mx:FormItem label="Search phrase">
+			<mx:TextInput id="rgQueryKeywords" text="search phrase" />
+			
+		</mx:FormItem>
+		<mx:FormItem label="Sort order">
+			<mx:TextInput id="rgItemSort" text="BestMatch" />
+		</mx:FormItem>
+		<mx:FormItem label="max results">
+			<mx:TextInput id="rgMaxEntries" text="10" />
+		</mx:FormItem>
+		<mx:FormItem label="Currency">
+			<mx:TextInput id="rgCurrency" text="USD" />
+		</mx:FormItem>
+
+	</mx:Form>
+	<mx:Script>
+		<![CDATA[
+		/*
+ This file is part of Eaws
+
+
+    Eaws is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+
+    Eaws is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License
+    along with Eaws.  If not, see <http://www.gnu.org/licenses/>.
+        author: azbest.pro (azbest.pro@gmail.com)
+*/
+			//http://open.api.ebay.com/shopping?version=517&
+			private function init():void{
+				this.rgButton.addEventListener(MouseEvent.CLICK,generateEBayRestQuery);
+			}
+			private function generateEBayRestQuery(event:MouseEvent ):void{
+					var query:String="";
+					query+=rgURL.text+"&";
+					query+="appid="+rgID.text+"&";
+					query+="callname="+rgCallname.text+"&";
+					query+="QueryKeywords="+rgQueryKeywords.text+"&";
+					query+="ItemSort="+rgItemSort.text+"&";
+					query+="MaxEntries="+rgMaxEntries.text+"&";
+					query+="Currency="+rgCurrency.text;
+					textArea.text=query;
+			}
+		]]>
+	</mx:Script>
+	<mx:Button x="10" y="251" label="Generate rest query" id="rgButton" creationComplete="{init()}"/>
+	<mx:TextArea x="10" y="281" width="380" height="151" id="textArea"/>
+	
+	
+</mx:Canvas>
